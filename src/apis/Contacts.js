@@ -1,5 +1,7 @@
 import Api from './Api';
 
+const END_POINT = 'contacts';
+
 export default {
     /**
      * Gets all the contacts from the user.
@@ -7,7 +9,7 @@ export default {
      * @return {AxiosResponse}
      */
     all() {
-        return Api.get('contacts');
+        return Api.get(END_POINT);
     }
 
     /**
@@ -17,7 +19,7 @@ export default {
      * @return {Promise<AxiosResponse>} 
      */
     create(storeContactsPayload) {
-        return Api.post('contacts', storeContactsPayload);
+        return Api.post(END_POINT, storeContactsPayload);
     }
 
     /**
@@ -27,7 +29,7 @@ export default {
      * @return {Promise<AxiosResponse>} 
      */
     get(id) {
-        return Api.get(`contacts/${id}`);
+        return Api.get(`${END_POINT}/${id}`);
     }
 
     /**
@@ -38,7 +40,7 @@ export default {
      * @return {Promise<AxiosResponse>}
      */
     update(id, updateContactsPayload){
-        return Api.put(`contacts/${$id}`, updateContactsPayload);
+        return Api.put(`${END_POINT}/${$id}`, updateContactsPayload);
     }
 
     /**
@@ -48,6 +50,6 @@ export default {
      * @return {Promise<AxiosResponse} 
      */
     delete(id){
-        return Api.delete(`contacts/${id}`)
+        return Api.delete(`${END_POINT}/${id}`)
     }
 }

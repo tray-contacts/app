@@ -1,5 +1,7 @@
 import Api from './Api';
 
+const END_POINT = 'auth';
+
 export default {
     /**
      * Authenticates the user.
@@ -8,7 +10,7 @@ export default {
      * @return {Promise<AxiosResponse>}
      */
     login(loginPayload) {
-        return Api.post('auth/login', loginPayload);
+        return Api.post(`${END_POINT}/login`, loginPayload);
     }
 
     /**
@@ -17,7 +19,7 @@ export default {
      * @return {Promise<AxiosResponse>} 
      */
     logout() {
-        return Api.post('auth/logout');
+        return Api.post(`${END_POINT}/logout`);
     }
 
     /**
@@ -26,7 +28,7 @@ export default {
      * @return {Promise<AxiosResponse>} 
      */
     refresh() {
-        return Api.post('auth/refresh');
+        return Api.post(`${END_POINT}/refresh`);
     }
 
     /**
@@ -35,6 +37,6 @@ export default {
      * @return {Promise<AxiosResponse>} 
      */
     me(){
-        return Api.get('auth/me');
+        return Api.get(`${END_POINT}/me`);
     }
 }
