@@ -1,7 +1,8 @@
-import Api from '../../Api/Api';
+import Auth from '../../Api/Auth';
 
 export const Login = ({commit}) => {
-    Api.post('login')
+    Auth.login()
         .then(response => commit('handleLoginPayload', response.data));
+        .catch(e => commit('handleErrors', e))
 }
 
