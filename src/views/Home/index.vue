@@ -25,7 +25,7 @@
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  name: 'Home',
+  name: 'Login',
   computed: mapGetters(['getEmail, getPassword, getLogginIn, getLoginError, getLoginSuccessful']),
   methods: mapActions(['login']),
 }

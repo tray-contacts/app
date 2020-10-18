@@ -1,8 +1,15 @@
-export const handleLoginPayload(state, payload) => {
+export const handleLoginResponse = (state, payload) => {
     state.loginSuccessful = true; 
     console.log('logged with success', payload);
 }
 
-export const handleErrors(state, errors) => {
+export const handleLoginErrors = (state, errors) => {
     state.loginError = errors;
+}
+
+export const generateLoginPayload = (state) => {
+    state.userObject = {
+        "email": state.email,
+        "password": state.password
+    }
 }

@@ -1,4 +1,4 @@
-import Api from './Api';
+import * as Api from './Api';
 
 const END_POINT = 'auth';
 
@@ -11,7 +11,7 @@ export default {
      */
     login(loginPayload) {
         return Api.post(`${END_POINT}/login`, loginPayload);
-    }
+    },
 
     /**
      * Invalidates the token of the user.
@@ -20,7 +20,7 @@ export default {
      */
     logout() {
         return Api.post(`${END_POINT}/logout`);
-    }
+    },
 
     /**
      * Refreshes the token of the user
@@ -29,7 +29,7 @@ export default {
      */
     refresh() {
         return Api.post(`${END_POINT}/refresh`);
-    }
+    },
 
     /**
      * Gets the user info that's currently authenticated.
@@ -38,5 +38,5 @@ export default {
      */
     me(){
         return Api.get(`${END_POINT}/me`);
-    }
+    },
 }
