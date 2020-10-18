@@ -1,5 +1,5 @@
 export default {
-    email: "",
+    email: "alskdjf",
     password: "",
     userObject: null, 
 

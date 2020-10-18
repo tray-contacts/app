@@ -10,7 +10,7 @@ export default {
      * @return {Promise<AxiosResponse>}
      */
     login(loginPayload) {
-        return Api.post(`${END_POINT}/login`, loginPayload);
+        return Api.default.post(`${END_POINT}/login`, loginPayload);
     },
 
     /**
@@ -19,7 +19,7 @@ export default {
      * @return {Promise<AxiosResponse>} 
      */
     logout() {
-        return Api.post(`${END_POINT}/logout`);
+        return Api.default.post(`${END_POINT}/logout`);
     },
 
     /**
@@ -28,7 +28,7 @@ export default {
      * @return {Promise<AxiosResponse>} 
      */
     refresh() {
-        return Api.post(`${END_POINT}/refresh`);
+        return Api.default.post(`${END_POINT}/refresh`);
     },
 
     /**
@@ -37,6 +37,6 @@ export default {
      * @return {Promise<AxiosResponse>} 
      */
     me(){
-        return Api.get(`${END_POINT}/me`);
+        return Api.default.get(`${END_POINT}/me`);
     },
 }

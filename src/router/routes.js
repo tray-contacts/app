@@ -1,13 +1,14 @@
 const routes = [
     {
-        path: '/',
-        name: 'Home',
-        component: () => import('@/views/Home/index'),
-    },
-    {
         path: '/login',
         name: 'Login',
         component: () => import('@/views/Login/index'),
+    },
+    {
+        path: '/contacts',
+        name: 'Contacts',
+        component: () => import('@/views/Contacts/index'),
+          meta: { requiresAuth: false }
     },
 ]
 

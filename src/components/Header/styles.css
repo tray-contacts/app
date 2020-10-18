@@ -1,0 +1,26 @@
+
+#toolbar {
+  z-index: 9999;
+}
+#v_list{
+  color: #004c90;
+}
+#logout {
+  cursor: pointer; 
+  padding-right:10px;
+  text-decoration: none; 
+  color: inherit;
+}
+#item-title {
+  white-space: normal;
+  font-size: 0.91em;
+  text-align:left;
+}
+#avatar-content {
+  margin-top: 2px;
+}
+@media only screen and (max-width: 1263px) {
+  #avatar-content {
+    padding-top: 10000px;
+  }
+}

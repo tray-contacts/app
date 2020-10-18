@@ -13,3 +13,11 @@ export const generateLoginPayload = (state) => {
         "password": state.password
     }
 }
+
+export const setEmail = (state, value) => {
+    state.email = value;
+}
+
+export const setPassword = (state, value) => {
+    state.password= value;
+}
