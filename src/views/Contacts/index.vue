@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <p>contacts</p>
+    <p>{{contacts}}</p>
   </div>
 </template>
 
@@ -25,7 +25,7 @@ export default {
     Contacts.all()
       .then(res => {
         let products = res.data        
-        console.log(products);
+        this.$store.state.products = products;
       })
       .catch(e => console.error('contacts error', e.response))
   }

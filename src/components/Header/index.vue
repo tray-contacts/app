@@ -56,12 +56,10 @@ export default {
   }),
   methods:{
     logout(){
-      Auth.logout()
-        .then(data => {
-          console.log("LOGGED OUT");
-          this.$router.push('/'); // the logout page
-        })
-        .catch(console.error) 
+      if(this.$route.name === "Login") return;
+      Auth.logout() // no need to check for 401 errors
+        .catch(e => console.log('ALREADY LOGGED OUT'));
+      this.$router.push('/'); // the logout page
     }
   },
   mounted(){
