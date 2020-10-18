@@ -15,7 +15,7 @@
         <v-layout justify-space-between>
           <v-btn @click="login">Login</v-btn>
         </v-layout>
-        </v-container>
+      </v-container>
     </v-form>
   </div>
 </template>
@@ -39,20 +39,32 @@ export default {
     }
   },
   methods: {
-    login(){
-      const payload = {
+    generatePayload(){
+      return {
         email: this.$store.state.email,
         password: this.$store.state.password
       };
+    },
 
+    handleLogon(token){
+      console.log("LOGGED ON")
+      axios.defaults.headers.common['Authorization'] = `bearer ${token.access_token}`;
+      this.$router.push('/contacts')
+    },
+
+    login(){
+      const payload = this.generatePayload();
       Auth.login(payload)
-        .then(res => {
-          axios.defaults.headers.common['Authorization'] = `bearer ${res.data.access_token}`;
-          this.$router.push('/contacts')
-        })
+        .then(res => this.handleLogon(res.data))
         .catch(e => console.error(e));
     },
+  },
+
+  created(){
+    this.$store.state.email = "";
+    this.$store.state.password = "";
   }
+
 }
 </script>
 

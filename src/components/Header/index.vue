@@ -41,6 +41,8 @@
 
 <script>
 
+import Auth from '../../apis/Auth';
+
 export default {
   name: "Menu",
   data: () => ({
@@ -54,7 +56,12 @@ export default {
   }),
   methods:{
     logout(){
-      this.$router.push('/Login')
+      Auth.logout()
+        .then(data => {
+          console.log("LOGGED OUT");
+          this.$router.push('/'); // the logout page
+        })
+        .catch(console.error) 
     }
   },
   mounted(){

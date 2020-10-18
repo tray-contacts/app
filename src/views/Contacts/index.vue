@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <p></p>
+    <p>contacts</p>
   </div>
 </template>
 
@@ -19,9 +19,10 @@ export default {
 
   },
   created(){
-    console.log('calling console apis')
     Contacts.all()
-      .then(res => console.log(res))
+      .then(res => {
+        console.log(res)        
+      })
       .catch(e => console.error('contacts error', e.response))
   }
 
