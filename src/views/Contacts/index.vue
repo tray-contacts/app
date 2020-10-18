@@ -13,7 +13,10 @@ import Contacts from '../../apis/Contacts';
 export default {
   name: 'Contacts',
   computed: {
-    
+    contacts: {
+      get() { return this.$store.state.contacts },
+      set(value) { this.$store.state.contacts = value },
+    },
   },
   methods: {
 
@@ -21,7 +24,8 @@ export default {
   created(){
     Contacts.all()
       .then(res => {
-        console.log(res)        
+        let products = res.data        
+        console.log(products);
       })
       .catch(e => console.error('contacts error', e.response))
   }

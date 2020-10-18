@@ -9,7 +9,8 @@ export default {
      * @return {AxiosResponse}
      */
     all() {
-        return Api.default.get(END_POINT);
+        return Api.default.get(END_POINT)
+            .then(payload => payload.data);
     },
 
     /**
@@ -19,7 +20,8 @@ export default {
      * @return {Promise<AxiosResponse>} 
      */
     create(storeContactsPayload) {
-        return Api.default.post(END_POINT, storeContactsPayload);
+        return Api.default.post(END_POINT, storeContactsPayload)
+            .then(payload => payload.data)
     },
 
     /**
@@ -29,7 +31,8 @@ export default {
      * @return {Promise<AxiosResponse>} 
      */
     get(id) {
-        return Api.default.get(`${END_POINT}/${id}`);
+        return Api.default.get(`${END_POINT}/${id}`)
+            .then(payload => payload.data)
     },
 
     /**
@@ -40,7 +43,8 @@ export default {
      * @return {Promise<AxiosResponse>}
      */
     update(id, updateContactsPayload){
-        return Api.default.put(`${END_POINT}/${id}`, updateContactsPayload);
+        return Api.default.put(`${END_POINT}/${id}`, updateContactsPayload)
+            .then(payload => payload.data)
     },
 
     /**
@@ -51,5 +55,6 @@ export default {
      */
     delete(id){
         return Api.default.delete(`${END_POINT}/${id}`)
+            .then(payload => payload.data)
     },
 }

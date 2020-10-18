@@ -55,7 +55,7 @@ export default {
     login(){
       const payload = this.generatePayload();
       Auth.login(payload)
-        .then(res => this.handleLogon(res.data))
+        .then(res => this.handleLogon(res))
         .catch(e => console.error(e));
     },
   },
