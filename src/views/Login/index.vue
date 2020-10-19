@@ -10,6 +10,7 @@
         <v-text-field
           label="Senha"
           v-model="password"
+          type="password"
           required
         ></v-text-field>
         <v-layout justify-space-between>
@@ -22,7 +23,6 @@
 
 <script>
 
-import { mapState, mapActions } from 'vuex';
 import Auth from '../../apis/Auth';
 import axios from 'axios';
 
@@ -39,7 +39,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions('login', ['LOGIN_ACTION']),
     generatePayload(){
       return {
         email: this.$store.state.email,
@@ -48,7 +47,6 @@ export default {
     },
 
     handleLogon(token){
-      console.log("LOGGED ON")
       axios.defaults.headers.common['Authorization'] = `bearer ${token.access_token}`;
       this.$router.push('/contacts')
     },
