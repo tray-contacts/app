@@ -147,11 +147,10 @@ export default {
     deleteItem (item) {
       const index = this.contacts.indexOf(item)
       this.deletedItem = Object.assign({}, item)
-      console.log(this.deletedItem)
-      this.deletedID = this.deletedItem._id
-      console.log(this.deletedID)
+      this.deletedID = this.deletedItem.id
       if (confirm("Você realmente quer excluir este contato?")) {
-        axios.delete(`http://localhost:5000/dessert/${this.deletedID}`);
+        Contacts.delete(this.deletedID)
+          .catch(console.error);
         this.contacts.splice(index, 1);
       }
     },
