@@ -3,7 +3,7 @@
 
     <v-toolbar id="toolbar" fixed light color="navbar" class="elevation-2">
       <v-app-bar-nav-icon @click="drawer = !drawer" class="white--text"></v-app-bar-nav-icon>
-      <v-toolbar-title class="white--text custom-typography">Tray Contacts</v-toolbar-title>
+      <v-toolbar-title class="white--text custom-typography">Contatos</v-toolbar-title>
       <v-spacer></v-spacer>
 
       <div id="logout" @click.prevent="logout">

@@ -39,6 +39,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('login', ['LOGIN_ACTION']),
     generatePayload(){
       return {
         email: this.$store.state.email,
