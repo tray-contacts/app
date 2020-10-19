@@ -1,4 +1,7 @@
-# app
+# Tray-Contacts 
+
+Um aplicativo em VueJS utilizando Vuetify, Vuex, VueRouter e Axios para 
+API calls no .
 
 ## Project setup
 ```

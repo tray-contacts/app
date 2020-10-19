@@ -1,200 +1,190 @@
-<template>
-  <div id="app">
-    <div v-for="contact in contacts" v-bind:key="contact.id">
-      <v-card light>
-        <v-card-title>{{contact.name}}</v-card-title>
-        <v-card-subtitle><strong>Email: {{contact.email}}<br>Telefone: {{contact.telephone.data.phone_number}}</strong></v-card-subtitle>
-        <v-card-actions v-bind:key="contact.socials.data.id">
-          <v-btn primary @click="editContact(contact)">Editar</v-btn>
-          <v-btn error @click="deleteContact(contact)">Excluir</v-btn>
-          <v-btn icon > <v-icon right>mdi-linkedin</v-icon> </v-btn>
-          <v-btn icon > <v-icon right>mdi-facebook</v-icon> </v-btn>
-        </v-card-actions>
-      </v-card>
-
-
-    </div>
-
-
-    <div data-app>
-      <v-row justify="center">
-        <v-dialog v-model="dialog"
-          persistent
-          max-width="600px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="primary"
-              dark
-              v-bind="attrs"
-              v-on="on"
-            >
-              Editar 
-            </v-btn>
+<template >
+  <v-data-table
+    data-app
+    :headers="headers"
+    :items="contacts"
+    sort-by="name"
+    class="elevation-1"
+  >
+    <template v-slot:top>
+      <v-toolbar flat color="white">
+        <v-toolbar-title>Meus contatos</v-toolbar-title>
+        <v-divider
+          class="mx-4"
+          inset
+          vertical
+        ></v-divider>
+        <v-spacer></v-spacer>
+        <v-dialog v-model="dialog" max-width="500px">
+          <template v-slot:activator="{ on }">
+            <v-btn color="primary" dark class="mb-2" v-on="on">Novo Contato</v-btn>
           </template>
           <v-card>
             <v-card-title>
-              <span class="headline">User Profile</span>
+              <span class="headline">{{ formTitle }}</span>
             </v-card-title>
+
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4">
-                    <v-text-field
-                      label="Nome"
-                      type="text"
-                      v-bind:key="name"
-                    ></v-text-field>
-                  </v-col>
-
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      label="Email"
-                      type="text"
-                      v-bind:key="email"
-                    ></v-text-field>
+                    <v-text-field v-model="editedItem.name" label="Nome"></v-text-field>
                   </v-col>
-
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      label="Facebook"
-                      type="text"
-                      v-bind:key="facebook"
-                    ></v-text-field>
+                    <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
                   </v-col>
-
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      label="Linkedin"
-                      type="text"
-                      v-bind:key="linkedin"
-                    ></v-text-field>
+                    <v-text-field v-model="editedItem.facebook" label="Facebook"></v-text-field>
                   </v-col>
-
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      label="Telefone"
-                      type="text"
-                      v-bind:key="telefone"
-                    ></v-text-field>
+                    <v-text-field v-model="editedItem.linkedin" label="LinkedIn"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="editedItem.telephone" label="Telefone"></v-text-field>
                   </v-col>
                 </v-row>
-
-
               </v-container>
             </v-card-text>
+
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="dialog = false" >
-                Cancelar
-              </v-btn>
-              <v-btn color="blue darken-1" text @click="updateContact" > 
-                Atualizar 
-              </v-btn>
+              <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+              <v-btn color="blue darken-1" text @click="save">Save</v-btn>
             </v-card-actions>
+
           </v-card>
         </v-dialog>
-      </v-row>
-    </div>
+      </v-toolbar>
+    </template>
 
+    <template v-slot:item.action="{ item }">
+      <v-icon small class="mr-2" @click="editItem(item)" >
+        mdi-pencil
+      </v-icon>
+      <v-icon small @click="deleteItem(item)" >
+        mdi-delete
+      </v-icon>
+    </template>
 
-
-  </div>
+    <template v-slot:no-data>
+      <p>Sem contatos para exibir.</p>
+    </template>
+  </v-data-table>
 </template>
 
-
 <script>
-
-
+import axios from 'axios'
 import Contacts from '../../apis/Contacts';
-import axios from 'axios';
 
 export default {
-  name: 'Contacts',
+  data: () => ({
+    dialog: false,
+    headers: [
+      { text: 'Nome', value: 'name', },
+      { text: 'Email', value: 'email', },
+      { text: 'Facebook', value: 'socials.data.facebook', },
+      { text: 'LinkedIn', value: 'socials.data.linkedin', },
+      { text: 'Gerenciar', value: 'action', sortable: false },
+    ],
+    contacts: [],
+    editedIndex: -1,
+    editedItem: {
+      name: '',
+      email: '',
+    },
+    defaultItem: {
+      name: '',
+      email: '',
+    },
+  }),
+  mounted() {
+    this.fetchItems()
+  },
+
   computed: {
-    contacts: {
-      get() { return this.$store.state.contacts },
-      set(value) { this.$store.state.contacts = value },
+    formTitle () {
+      return this.editedIndex === -1 ? 'Novo contato' : 'Editar contato'
     },
-    dialog: {
-      get() { return this.$store.state.dialog },
-      set(value) { this.$store.state.dialog = value },
-    },
-    name: {
-      get() { return this.$store.state.name },
-      set(value) { this.$store.state.name = value },
-    },
-    email: {
-      get() { return this.$store.state.email },
-      set(value) { this.$store.state.email = value },
-    },
-    linkedin: {
-      get() { return this.$store.state.linkedin },
-      set(value) { this.$store.state.linkedin = value },
-    },
-    facebook: {
-      get() { return this.$store.state.facebook },
-      set(value) { this.$store.state.facebook = value },
-    },
-    telephone: {
-      get() { return this.$store.state.telephone },
-      set(value) { this.$store.state.telephone = value },
-    },
-    isUpdating: {
-      get() { return this.$store.state.isUpdating },
-      set(value) { this.$store.state.isUpdating }
-    } 
   },
+  watch: {
+    dialog (val) {
+      val || this.close()
+    },
+  },
+  created () {
+    this.fetchItems();
+  },
+
+
   methods: {
-    inverseDialog(){
-      this.$store.state.dialog = !this.$store.state.dialog;
-    },
-    handleContactsPayload(res){
-      let contacts = res.data        
-      this.$store.state.contacts = contacts;
-      console.log(contacts)
+
+    handleContactsPayload(payload){
+      this.contacts = payload.data
     },
 
-    deleteContactFromList(id){
-      console.log('deleteContactFromList id');
-    },
-    deleteContact(id){
-      console.log("deleting a contact", id)
-      Contacts.delete(id)
-        .then(res => this.deleteContactFromList(id))
-    },
-    editContact(contact){
-      this.$store.state.email = contact.email;
-      this.$store.state.name = contact.name;
-      this.$store.state.facebook = contact.socials.data.facebook;
-      this.$store.state.linkedin = contact.socials.data.linkedin;
-      this.$store.state.telephone = contact.socials.data.telephone;
-      this.$store.state.dialog = true;
-      console.log('dialog: ', this.$store.state.dialog);
+
+    fetchItems(){
+      let isLogged = axios.defaults.headers.common['Authorization'];
+      if(isLogged) {
+        Contacts.all()
+          .then(this.handleContactsPayload)
+          .catch(e => console.error('contacts error', e))
+        this.$forceUpdate();
+      }
+      else
+        this.$router.push('/')
     },
 
+    editItem (item) {
+      this.editedIndex = this.contacts.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.editedID = this.editedItem._id
+      this.name = this.editedItem.name
+      this.email = this.editedItem.email
+      this.dialog = true
+    },
+
+    deleteItem (item) {
+      const index = this.contacts.indexOf(item)
+      this.deletedItem = Object.assign({}, item)
+      console.log(this.deletedItem)
+      this.deletedID = this.deletedItem._id
+      console.log(this.deletedID)
+      if (confirm("Você realmente quer excluir este contato?")) {
+        axios.delete(`http://localhost:5000/dessert/${this.deletedID}`);
+        this.contacts.splice(index, 1);
+      }
+    },
+
+    close () {
+      this.dialog = false
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      }, 300)
+    },
+    save () { // Edit Item
+      if (this.editedIndex > -1) {
+        Object.assign(this.contacts[this.editedIndex], this.editedItem)
+        axios.delete(`http://localhost:5000/dessert/${this.editedItem._id}`)
+        axios
+          .post('http://localhost:5000/dessert', {
+            name: this.editedItem.name,
+            email: this.editedItem.email
+          })
+
+        // New Item
+      } else {
+        this.contacts.push(this.editedItem)
+
+        axios.post('http://localhost:5000/dessert', {
+          name: this.editedItem.name,
+          email: this.editedItem.email
+        })
+      }
+
+      this.close()
+    },
   },
-  created(){
-    let isLogged = axios.defaults.headers.common['Authorization'];
-    if(isLogged) {
-      Contacts.all()
-        .then(this.handleContactsPayload)
-        .catch(e => console.error('contacts error', e.response))
-      this.$forceUpdate();
-    }
-    else
-      this.$router.push('/')
-  },
-  updateContact(){
-    console.log("update contact")
-  }
 }
-
 </script>
-
-<style>
-@import './styles.css';
-</style>
-
