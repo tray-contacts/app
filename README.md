@@ -31,3 +31,10 @@ Rode o servidor.
 ```
 npm run serve
 ```
+
+## Informações de login predefinidas.
+
++ Leonardo
+    Login: tray@tray.net.br
+    senha: tray
+

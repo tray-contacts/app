@@ -39,9 +39,6 @@
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field v-model="editedItem.linkedin" label="LinkedIn"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.telephone" label="Telefone"></v-text-field>
-                  </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -91,10 +88,14 @@ export default {
     editedItem: {
       name: '',
       email: '',
+      facebook: '',
+      linkedin: '',
     },
     defaultItem: {
       name: '',
       email: '',
+      facebook: '',
+      linkedin: '',
     },
   }),
   mounted() {
@@ -120,6 +121,7 @@ export default {
 
     handleContactsPayload(payload){
       this.contacts = payload.data
+      console.log(this.contacts);
     },
 
 
@@ -128,7 +130,7 @@ export default {
       if(isLogged) {
         Contacts.all()
           .then(this.handleContactsPayload)
-          .catch(e => console.error('contacts error', e))
+          .catch(e => console.error(e.response))
         this.$forceUpdate();
       }
       else
@@ -138,9 +140,11 @@ export default {
     editItem (item) {
       this.editedIndex = this.contacts.indexOf(item)
       this.editedItem = Object.assign({}, item)
-      this.editedID = this.editedItem._id
+      this.editedID = this.editedItem.id
       this.name = this.editedItem.name
       this.email = this.editedItem.email
+      this.facebook = this.editedItem.socials.data.facebook;
+      this.linkedin = this.editedItem.socials.data.linkedin;
       this.dialog = true
     },
 
@@ -150,7 +154,7 @@ export default {
       this.deletedID = this.deletedItem.id
       if (confirm("Você realmente quer excluir este contato?")) {
         Contacts.delete(this.deletedID)
-          .catch(console.error);
+          .catch(e => console.log(e.response));
         this.contacts.splice(index, 1);
       }
     },
@@ -162,24 +166,58 @@ export default {
         this.editedIndex = -1
       }, 300)
     },
+
+    contactUpdatedFacebook(id){
+      return this.editedItem.socials.data.facebook !== this.contacts[id].socials.data.facebook;
+    },
+    contactUpdatedLinkedin(id){
+      return this.editedItem.socials.data.linkedin !== this.contacts[id].socials.data.linkedin;
+    },
+    contactUpdatedEmail(id){
+      return this.editedItem.email !== this.contacts[id].email;
+    },
+    generateEditPayload(){
+      let id = this.editedItem.id;
+      let ret = {};
+      ret.socials = {};
+      ret.telephone = {};
+      ret.id = this.editedItem.id;
+      ret.name = this.editedItem.name;
+      if(!this.contactUpdatedEmail(id))
+        ret.email = this.editedItem.email;
+      if(!this.contactUpdatedFacebook(id))
+        ret.socials.facebook = this.editedItem.socials.data.facebook;
+      if(!this.contactUpdatedLinkedin(id))
+        ret.socials.email = this.editedItem.socials.data.email;
+
+      // TODO: telephones
+      return ret;
+    },
+    generateNewPayload(){
+      let ret = {};
+      ret.socials = {};
+      ret.telephone = {};
+      ret.id = this.editedItem.id;
+      ret.name = this.editedItem.name;
+      ret.email = this.editedItem.email;
+      ret.socials.facebook = this.editedItem.socials.data.facebook;
+      ret.socials.email = this.editedItem.socials.data.email;
+      // TODO: telephones
+      return ret;
+    },
     save () { // Edit Item
       if (this.editedIndex > -1) {
         Object.assign(this.contacts[this.editedIndex], this.editedItem)
-        axios.delete(`http://localhost:5000/dessert/${this.editedItem._id}`)
-        axios
-          .post('http://localhost:5000/dessert', {
-            name: this.editedItem.name,
-            email: this.editedItem.email
-          })
+        let payload = this.generateEditPayload();
+        Contacts.update(this.editedItem.id, payload)
+          .catch(e => console.error(e.response))
 
         // New Item
       } else {
         this.contacts.push(this.editedItem)
-
-        axios.post('http://localhost:5000/dessert', {
-          name: this.editedItem.name,
-          email: this.editedItem.email
-        })
+        let payload = this.generateNewPayload();
+        Contacts.create(payload)
+          .catch(e => console.error(e.response))
       }
 
       this.close()
