@@ -116,7 +116,6 @@ export default {
     this.fetchItems();
   },
 
-
   methods: {
 
     handleContactsPayload(payload){
@@ -188,20 +187,24 @@ export default {
       if(!this.contactUpdatedFacebook(id))
         ret.socials.facebook = this.editedItem.socials.data.facebook;
       if(!this.contactUpdatedLinkedin(id))
-        ret.socials.email = this.editedItem.socials.data.email;
+        ret.socials.linkedin = this.editedItem.socials.data.linkedin;
 
       // TODO: telephones
       return ret;
     },
     generateNewPayload(){
+      console.log('editedItem', this.editedItem);
       let ret = {};
       ret.socials = {};
       ret.telephone = {};
       ret.id = this.editedItem.id;
       ret.name = this.editedItem.name;
-      ret.email = this.editedItem.email;
-      ret.socials.facebook = this.editedItem.socials.data.facebook;
-      ret.socials.email = this.editedItem.socials.data.email;
+      if(this.editedItem.email)
+        ret.email = this.editedItem.email;
+      if(this.editedItem.facebook)
+        ret.socials.facebook = this.editedItem.facebook;
+      if(this.editedItem.linkedin)
+        ret.socials.linkedin = this.editedItem.linkedin;
       // TODO: telephones
       return ret;
     },
@@ -214,9 +217,9 @@ export default {
 
         // New Item
       } else {
-        this.contacts.push(this.editedItem)
         let payload = this.generateNewPayload();
         Contacts.create(payload)
+          .then(this.contacts.push(this.editedItem))
           .catch(e => console.error(e.response))
       }
 

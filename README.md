@@ -10,6 +10,7 @@ Passei a maior parte do meu tempo escrevendo a [API](https://github.com/tray-con
 logo quando se trata da aplicação podemos dizer que foi um pouco prejudicada devida ao tempo.
 Levando em conta que não tive nenhuma experiência prévia com VueJS, diria que consegui aplicar 
 os conceitos de forma tranquila.
+A aplicação não tem cadastro de telefones, embora a API tem suporte.
 
 
 ## Instalação 
@@ -38,3 +39,15 @@ npm run serve
     Login: tray@tray.net.br
     senha: tray
 
+
+## TODO List: 
+- [x] Página de autenticação.
+- [x] Cadastro de contatos.
+- [x] Visualizar contatos.
+- [x] Criar contatos.
+- [x] Editar contatos.
+- [x] Remover contatos.
+- [ ] Visualizar telefones.
+- [ ] Criar telefones.
+- [ ] Editar telefones.
+- [ ] Remover telefones.
